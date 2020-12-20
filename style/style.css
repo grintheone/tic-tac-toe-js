@@ -38,16 +38,19 @@ body {
     transform: translate(-50%)
 }
 .player-left {
+    cursor: pointer;
     position: absolute;
     top: 15%;
     right: 70%;
 }
 .player-right {
+    cursor: pointer;
     position: absolute;
     top: 15%;
     left: 70%;
 }
 #start-game {
+    cursor: pointer;
     padding: 5px 10px;
     border-radius: 15px;
     box-shadow: 0 0 1px 0;
@@ -56,8 +59,16 @@ body {
     left: 50%;
     transform: translate(-50%, -50%);
 }
+#start-game:hover {
+    background: linear-gradient(20deg, rgba(175, 28, 28, 0.5), rgba(63, 135, 166, 0.5));
+    outline: none;
+}
+#start-game:active {
+    box-shadow: 0 0 10px 0px black;
+}
 
 #change-players {
+    cursor: pointer;
     padding: 5px 10px;
     border-radius: 15px;
     box-shadow: 0 0 1px 0;
@@ -66,7 +77,15 @@ body {
     left: 50%;
     transform: translate(-50%, -50%);
 }
+#change-players:hover {
+    background: linear-gradient(20deg, rgba(175, 28, 28, 0.5), rgba(63, 135, 166, 0.5));
+    outline: none;
+}
+#change-players:active {
+    box-shadow: 0 0 10px 0px black;
+}
 #new-game {
+    cursor: pointer;
     padding: 5px 10px;
     border-radius: 15px;
     box-shadow: 0 0 1px 0;
@@ -74,6 +93,13 @@ body {
     top: 30%;
     left: 50%;
     transform: translate(-50%, -50%);
+}
+#new-game:hover {
+    background: linear-gradient(20deg, rgba(175, 28, 28, 0.5), rgba(63, 135, 166, 0.5));
+    outline: none;
+}
+#new-game:active {
+    box-shadow: 0 0 10px 0px black;
 }
 .player-options {
     width: 70px;
@@ -83,17 +109,90 @@ body {
 .left {
     position: absolute;
     top: 20%;
-    right: 72%;
+    right: 71%;
 }
 .right {
     position: absolute;
     top: 20%;
-    left: 72%;
+    left: 71%;
 }
 .btn {
     padding: 2px 7px;
     margin-top: 3px;
+    text-align: center;
+    border: 1px solid;
+    border-radius: 15px;
+}
+div.player-options:nth-child(3) > div:hover {
+    cursor: pointer;
+    background-color: #3f87a6;
+}
+div.player-options:nth-child(4) > div:hover {
+    cursor: pointer;
+    background-color: #af1c1c;
+}
+#active-left {
+    background-color: #3f87a6;
+}
+#active-right {
+    background-color: #af1c1c;
 }
 .hidden {
     display: none;
 }
+/* Rules settings */
+#arrow-1 {
+    opacity: 0.5;
+    font-size: 1.5rem;
+    position: absolute;
+    top:-155%;
+    left: -30%;
+    transform: rotate(45deg);
+}
+#rule-1 {
+    opacity: 0.6;
+    font-size: 0.8rem;
+    position: absolute;
+    top: -200%;
+    left: -200%;
+    transform: rotate(-20deg);
+}
+
+#arrow-2 {
+    opacity: 0.5;
+    font-size: 1.5rem;
+    position: absolute;
+    top: -155%;
+    right: -30%;
+    transform: rotate(-45deg);
+}
+#rule-2 {
+    opacity: 0.6;
+    font-size: 0.8rem;
+    position: absolute;
+    top: -170%;
+    right: -180%;
+    transform: rotate(20deg);
+}
+
+.markers {
+    cursor:pointer;
+}
+
+#form {
+    display: none;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 10px;    
+    border: 1px solid red;
+}
+#form label {
+    position: relative;
+    top: 2.5px;
+}
+#form-btn {
+    text-align: center;
+}
+

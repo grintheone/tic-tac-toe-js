@@ -10,18 +10,40 @@
     <body>
         <h1 id="title">Tit-Tac-Toe</h1>
         <div class="main-container">
-        <p class="player-left">Player 1 <span>(X)</span>:</p>
-        <p class="player-right">Player 2 <span>(O)</span>:</p>
+        <p class="player-left form"><span id='arrow-1'>&rarr;</span><span id="rule-1">Click here to change player's name</span><span id="first-player-name">Player 1</span><span id="first-player-marker"> (X)</span></p>
+        <p class="player-right form"><span id="rule-2">Or change player's marker</span><span id="second-player-name">Player 2</span><span id="second-player-marker"> (O)</span><span id='arrow-2'>&larr;</span></p>
         <div class="player-options left">
-            <button class="btn">Human</button>
-            <button class="btn">AI</button>
+            <div class="btn">Human</div>
+            <div class="btn">AI</div>
         </div>
         <div class="player-options right">
-            <button class="btn">Human</button>
-            <button class="btn">AI</button>
+            <div class="btn">Human</div>
+            <div class="btn">AI</div>
         </div>
-        <button id="start-game">Start Game</button>
+        <div id="start-game">Start Game</div>
         </div>
+
+        <form id="form">
+            <label for="player-name">Name:</label><br>
+            <input type="text" id="player-name" name="name"></br></br>
+            
+            <fieldset>
+                <legend>Markers:</legend>
+                <input type="radio" id="classic" name="mark" value="classic">
+                <label for="classic">Classic (<span class="emoji"></span>)</label><br>
+                <input type="radio" id="xmas" name="mark" value="xmas">
+                <label for="xmas">Xmas (<span class="emoji"></span>)</label><br>
+                <input type="radio" id="animal" name="mark" value="animal">
+                <label for="animal">Animal (<span class="emoji"></span>)</label><br>
+                <input type="radio" id="element" name="mark" value="element">
+                <label for="element">Element (<span class="emoji"></span>)</label><br>
+            </fieldset>
+            <div id="form-btn">
+            <button type="button" id="accept">Accept</button>
+            <button type="button" id="cancel">Cancel</button>
+            </div>
+          </form>
+
         <script type="text/javascript" src="script.js"></script>
     </body>
 </html>
