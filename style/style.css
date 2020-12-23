@@ -23,16 +23,18 @@ body {
     justify-content: center;
     align-items: center;
     background-color: white;
-    font-size: 2rem;
+    font-size: 4rem;
 }
 #title {
     position: absolute;
+    font-size: 38px;
     top: 10%;
     left: 50%;
     transform: translate(-50%, -50%);
 }
 #currentPlayer {
     position: absolute;
+    font-size: 26px;
     top: 20%;
     left: 50%;
     transform: translate(-50%)
@@ -186,7 +188,14 @@ div.player-options:nth-child(4) > div:hover {
     left: 50%;
     transform: translate(-50%, -50%);
     padding: 10px;    
-    border: 1px solid red;
+    background-color: rgba(0, 0, 0, 0.1);
+    border: 2px solid white;
+    border-image-slice: 1;
+    border-image-source: linear-gradient(to left, rgba(63, 135, 166, 1) ,rgba(175, 28, 28, 1));
+}
+#form fieldset {
+    border-image-slice: 1;
+    border-image-source: linear-gradient(to left, rgba(175, 28, 28, 1), rgba(63, 135, 166, 1));
 }
 #form label {
     position: relative;
@@ -194,5 +203,15 @@ div.player-options:nth-child(4) > div:hover {
 }
 #form-btn {
     text-align: center;
+}
+#form button {
+    cursor: pointer;
+    padding: 3px 7px;
+    margin-top: 10px;
+    box-shadow: 0 0 1px 0;
+}
+
+#player-name {
+    margin-top: 10px
 }
 

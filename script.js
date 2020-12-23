@@ -9,6 +9,11 @@ const gameTextObj = (() => {
                 left[1].removeAttribute('id', 'active-left')
             }
             e.target.setAttribute('id', 'active-left')
+            if (e.target.textContent == 'Human') {
+                firstPlayer.ai = false;
+            } else {
+                firstPlayer.ai = true;
+            }
         })
     }
     
@@ -21,6 +26,11 @@ const gameTextObj = (() => {
                 right[1].removeAttribute('id', 'active-right')
             }
             e.target.setAttribute('id', 'active-right');
+            if (e.target.textContent == 'Human') {
+                secondPlayer.ai = false;
+            } else {
+                secondPlayer.ai = true;
+            }
         })
     }
 
@@ -47,22 +57,27 @@ const gameTextObj = (() => {
     const winStage = () => {
         const announce = document.getElementById('currentPlayer');
         announce.textContent = announceWinner();
+        announce.style.fontSize = '30px';
 
         // Play again with the same players
-        const startOver = document.createElement('div');
-        startOver.setAttribute('id', 'new-game');
-        startOver.textContent = 'Play again';
-        startOver.addEventListener('click', game.startOver);
-        document.body.appendChild(startOver);
-
-        // Change players (main menu analog)
-        const changePlayers = document.createElement('div');
-        changePlayers.setAttribute('id', 'change-players');
-        changePlayers.textContent = 'Change Players';
-        changePlayers.addEventListener('click', game.backToMenu);
-        document.body.appendChild(changePlayers);
+        if (document.getElementById('new-game') == null) {
+            const startOver = document.createElement('div');
+            startOver.setAttribute('id', 'new-game');
+            startOver.textContent = 'Play again';
+            startOver.addEventListener('click', game.startOver);
+            document.body.appendChild(startOver);
+        }
+        
+        // Change players (kind of like main menu)
+        if (document.getElementById('change-players') == null) {
+            const changePlayers = document.createElement('div');
+            changePlayers.setAttribute('id', 'change-players');
+            changePlayers.textContent = 'Change Players';
+            changePlayers.addEventListener('click', game.backToMenu);
+            document.body.appendChild(changePlayers);
+        }
     }
-
+    // Determing the player name displayed depending on the counter
     function changeName() {
         if (counter % 2 == 1) {
             document.getElementById('currentPlayer').textContent = firstPlayer.name + ` (${firstPlayer.marker}) turn:`;
@@ -72,12 +87,15 @@ const gameTextObj = (() => {
     }
 
     function announceWinner() {
-        if (counter == 9) {
-            return 'It\'s a tie!';
+        if (!(gameBoardObj.isOver(firstPlayer) || gameBoardObj.isOver(secondPlayer))) {
+            if (counter == 9) {
+                return 'It\'s a tie!';
+            }
         }
-        if (counter % 2 == 1) {
+        
+        if (gameBoardObj.isOver(secondPlayer)) {
             return `${secondPlayer.name} (${secondPlayer.marker}) wins!`
-        } else {
+        } else if (gameBoardObj.isOver(firstPlayer)) {
             return `${firstPlayer.name} (${firstPlayer.marker}) wins!`
         } 
     }
@@ -103,6 +121,7 @@ const gameBoardObj = (() => {
             const cell = document.createElement('div');
             gameboard.push(cell.textContent);
             cell.setAttribute('class', 'grid-cell');
+            cell.setAttribute('id', i);
             board.appendChild(cell);
         }
         document.body.appendChild(board);
@@ -121,25 +140,68 @@ const gameBoardObj = (() => {
     // Function to add events for first player 
     const PlayerMove = () => {
         const cells = document.querySelectorAll('.grid-cell');
+        if (firstPlayer.ai == true && secondPlayer.ai == true) {
+            aiGame();
+        } else if (firstPlayer.ai == true) {
+            let currentPlayer = switchPlayers(counter, firstPlayer, secondPlayer);
+            AIMove(currentPlayer);
+        }
         for (let i = 0; i < cells.length; i++) {
-            cells[i].addEventListener('click', () => {
-                if (isOver(firstPlayer) || isOver(secondPlayer)) {
-                    return;
+            cells[i].addEventListener('click', makeMove)
+        }
+    }
+
+    const makeMove = (e) => {
+        if (isOver(firstPlayer) || isOver(secondPlayer)) {
+            gameTextObj.winStage();
+            return;
+        }
+        if (firstPlayer.ai == false && secondPlayer.ai == false && e.target.textContent == '') {
+            const currentPlayer = switchPlayers(counter, firstPlayer, secondPlayer);
+            e.target.textContent = currentPlayer.marker;
+            gameBoardObj.gameboard[e.target.id] = currentPlayer.marker;
+            counter++;
+            if (isOver(firstPlayer) || isOver(secondPlayer) || counter == 9) {
+                gameTextObj.winStage();
+            }
+        } else if (firstPlayer.ai == false && secondPlayer.ai == true ||
+                firstPlayer.ai == true && secondPlayer.ai == false) {
+            let currentPlayer = switchPlayers(counter, firstPlayer, secondPlayer);
+            e.target.textContent = currentPlayer.marker;
+            gameBoardObj.gameboard[e.target.id] = currentPlayer.marker;
+            counter++;
+            currentPlayer = switchPlayers(counter, firstPlayer, secondPlayer);
+            AIMove(currentPlayer);
+            if (isOver(firstPlayer) || isOver(secondPlayer) || counter == 9) {
+                gameTextObj.winStage();
+            }
+        } 
+    }
+
+    const AIMove = (currentPlayer) => {
+        const cells = document.querySelectorAll('.grid-cell');
+        if (isOver(firstPlayer) || isOver(secondPlayer) || counter == 9) {
+            gameTextObj.winStage();
+        } else {
+            while (true) {
+                const move = Math.floor(Math.random() * 9)
+                if (gameBoardObj.gameboard[move] == '') {
+                    gameBoardObj.gameboard[move] = currentPlayer.marker;
+                    cells[move].textContent = currentPlayer.marker;
+                    break;
                 }
-                if (cells[i].textContent == '') {
-                    const currentPlayer = switchPlayers(counter, firstPlayer, secondPlayer);
-                    cells[i].textContent = currentPlayer.marker;
-                    gameBoardObj.gameboard[i] = currentPlayer.marker;
-                    if (isOver(firstPlayer) || isOver(secondPlayer)) {
-                        gameTextObj.winStage();
-                        return;
-                    }
-                    counter++;
-                    if (counter == 9) {
-                        gameTextObj.winStage();
-                    }
-                }           
-            })
+            }   
+        }
+        counter++;
+    }
+
+    const aiGame = () => {
+        while (gameBoardObj.gameboard.includes('') && !(isOver(firstPlayer) || isOver(secondPlayer))) {
+            AIMove(firstPlayer);
+            AIMove(secondPlayer);
+        }
+        if (isOver(firstPlayer) || isOver(secondPlayer) || counter == 9) {
+            gameTextObj.winStage();
         }
     }
 
@@ -199,13 +261,15 @@ const game = (() => {
     }
 
     const startOver = () => {
+        counter = 0;
         gameTextObj.gameStage();
         gameBoardObj.clearTheBoard();
         gameBoardObj.createBoard();
         gameBoardObj.PlayerMove();
-        counter = 0;
-        document.getElementById('new-game').remove();
-        document.getElementById('change-players').remove();
+        if (!(firstPlayer.ai == true && secondPlayer.ai == true)) {
+            document.getElementById('new-game').remove();
+            document.getElementById('change-players').remove();
+        }
     }
 
     const backToMenu = () => {
@@ -221,14 +285,16 @@ const game = (() => {
 })();
 
 // Factory function for creating players
-const Player = (name, marker, markers) => {
-    return {name, marker, markers}
-}
+const Player = (name, marker, markers, ai) => {
+    return {name, marker, markers, ai}
+} 
 
+// Create players and counter to keep track of the game.
 let counter = 0
-const firstPlayer = Player('Player 1','X', ['X', '🎄', '🐶', '💧']);
-const secondPlayer = Player('Player 2','O', ['O', '🎁', '🐱', '🔥']);
+const firstPlayer = Player('Player 1','X', ['X', '🎄', '🐶', '💧'], false);
+const secondPlayer = Player('Player 2','O', ['O', '🎁', '🐱', '🔥'], false);
 
+// An object to change players names and markers
 const formObj = (() => {
     let currentPlayer = '';
     const accept = document.getElementById('accept');
@@ -239,7 +305,6 @@ const formObj = (() => {
     
     // Make changes to the player variable
     function makeChanges() {
-
         const newName = document.getElementById('player-name').value;
         const radio = document.querySelectorAll('input[type="radio"]');
         // Change players marker
